@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.model import WineQualityModel
 
-db = OracleDB()
+db: Optional[OracleDB] = None
 
 # Настройка логгера
 logging.basicConfig(level=logging.INFO)
@@ -22,7 +22,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global model
+    global model, db
+    db = OracleDB()
     try:
         model_path = os.getenv('MODEL_PATH', 'models/wine_model.pkl')
         scaler_path = os.getenv('SCALER_PATH', 'models/scaler.pkl')
@@ -172,7 +173,8 @@ async def predict(features: WineFeatures):
         result = model.predict(features_dict)
 
         # СОХРАНЕНИЕ В БАЗУ ДАННЫХ
-        db.save_prediction(features_dict, result)
+        if db:
+            db.save_prediction(features_dict, result)
         return PredictionResponse(**result)
     except ValueError as e:
         logger.warning(f"Invalid input: {e}")

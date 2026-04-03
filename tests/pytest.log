@@ -1,14 +1,17 @@
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Entity"
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: POST http://testserver/predict "HTTP/1.1 503 Service Unavailable"
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Entity"
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: GET http://testserver/features "HTTP/1.1 503 Service Unavailable"
-DEBUG    asyncio:selector_events.py:54 Using selector: EpollSelector
-INFO     httpx:_client.py:1027 HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-03 17:46:25 [DEBUG] Starting new HTTP connection (1): localhost:8200
+2026-04-03 17:46:25 [DEBUG] http://localhost:8200 "GET /v1/secret/data/oracle-db-creds HTTP/1.1" 403 33
+2026-04-03 17:46:25 [WARNING] ⚠️ Vault not available or error: permission denied, on get http://localhost:8200/v1/secret/data/oracle-db-creds. Using env fallbacks.
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Entity"
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 503 Service Unavailable"
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Entity"
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: GET http://testserver/features "HTTP/1.1 503 Service Unavailable"
+2026-04-03 17:46:26 [DEBUG] Using proactor: IocpProactor
+2026-04-03 17:46:26 [INFO] HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"

@@ -10,9 +10,15 @@ class OracleDB:
     def __init__(self):
         secrets = vault_manager.get_db_secrets()
 
-        self.user = secrets.get("DB_USER")
-        self.password = secrets.get("DB_PASSWORD")
-        self.dsn = os.getenv("DB_DSN")
+        # если secrets  None -  пустые строки или env
+        if secrets:
+            self.user = secrets.get("DB_USER")
+            self.password = secrets.get("DB_PASSWORD")
+        else:
+            self.user = os.getenv("DB_APP_USER", "default")
+            self.password = os.getenv("DB_APP_PASSWORD", "default")
+
+        self.dsn = os.getenv("DB_DSN", "localhost:1521/FREEPDB1")
         self.connection = None
 
         if not self.user or not self.password:
