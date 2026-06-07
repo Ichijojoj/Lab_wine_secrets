@@ -212,10 +212,10 @@ async def predict_batch(request: BatchPredictionRequest):
 
         return BatchPredictionResponse(predictions=results)
 
-    except Exception as e:
+    except (ValueError, KeyError) as e:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Validation error: {str(e)}"
         )
 
 
@@ -241,9 +241,16 @@ async def get_metrics():
             detail="Model not loaded"
         )
 
+    metrics_path = os.getenv('METRICS_PATH', 'models/metrics.pkl')
+
+    if not os.path.exists(metrics_path):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Metrics file does not exist"
+        )
+
     try:
         import joblib
-        metrics_path = os.getenv('METRICS_PATH', 'models/metrics.pkl')
         metrics = joblib.load(metrics_path)
 
         return {
@@ -253,10 +260,15 @@ async def get_metrics():
             "test_size": metrics.get('test_size', 0),
             "feature_importance": metrics.get('feature_importance', {})
         }
-    except Exception as e:
+    except (PermissionError, FileNotFoundError) as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Could not load metrics: {str(e)}"
+            detail=f"File access error: {str(e)}"
+        )
+    except (AttributeError, ImportError) as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Serialization / load error: {str(e)}"
         )
 
 

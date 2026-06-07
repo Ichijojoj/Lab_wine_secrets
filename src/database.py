@@ -10,7 +10,6 @@ class OracleDB:
     def __init__(self):
         secrets = vault_manager.get_db_secrets()
 
-        # если secrets  None -  пустые строки или env
         if secrets:
             self.user = secrets.get("DB_USER")
             self.password = secrets.get("DB_PASSWORD")
@@ -26,21 +25,21 @@ class OracleDB:
 
     def get_connection(self):
         try:
-            # Используем Thin mode (не требует Instant Client)
             conn = oracledb.connect(
                 user=self.user,
                 password=self.password,
                 dsn=self.dsn
             )
             return conn
-        except Exception as e:
+        except oracledb.Error as e:
             logger.error(f"❌ Database connection error: {e}")
             return None
 
     def init_db(self):
         """Создание таблицы для логов предсказаний"""
         conn = self.get_connection()
-        if not conn: return
+        if not conn:
+            return
 
         try:
             cursor = conn.cursor()
@@ -62,12 +61,15 @@ class OracleDB:
             """)
             conn.commit()
             logger.info("✅ Database initialized")
+        except oracledb.Error as e:
+            logger.error(f"❌ Database initialization query failed: {e}")
         finally:
             conn.close()
 
     def save_prediction(self, features, result):
         conn = self.get_connection()
-        if not conn: return
+        if not conn:
+            return
 
         try:
             cursor = conn.cursor()
@@ -83,7 +85,9 @@ class OracleDB:
                 result['probability']
             ))
             conn.commit()
-        except Exception as e:
+        except oracledb.Error as e:
             logger.error(f"❌ Error saving to DB: {e}")
+        except KeyError as e:
+            logger.error(f"❌ Key missing when saving to DB: {e}")
         finally:
             conn.close()
